@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -9,18 +10,18 @@ import 'package:universal_html/html.dart' as html;
 class ArchivoController {
   FilePickerResult? archivo;
   Map<String, dynamic> profesoresMapa = {};
+  List<Map<String, dynamic>> calendario = [
+    {}, //LUN
+    {}, //MAR
+    {}, //MIE
+    {}, //JUE
+    {}, //VIE
+    {}, //SAB
+    {}, //DOM
+  ];
 
   crearMapaHorarios() {
     //se crea un mapa con los horarios de los profesores
-    List<Map<String, dynamic>> calendario = [
-      {}, //LUN
-      {}, //MAR
-      {}, //MIE
-      {}, //JUE
-      {}, //VIE
-      {}, //SAB
-      {}, //DOM
-    ];
 
     for (var profesor in profesoresMapa.values) {
       for (var horario in profesor['horarios']) {
@@ -146,7 +147,7 @@ class ArchivoController {
         }
         // print(profesoresMapa);
 
-        descargar(profesoresMapa);
+        // descargar(profesoresMapa);
       }
     } catch (e) {
       // print('Error al leer el archivo: $e');

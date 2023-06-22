@@ -60,5 +60,6 @@ class DefaultFirebaseOptions {
     authDomain: 'uatasist.firebaseapp.com',
     databaseURL: 'https://uatasist-default-rtdb.firebaseio.com',
     storageBucket: 'uatasist.appspot.com',
+    measurementId: 'G-ZFRWHW0JLJ',
   );
 }
