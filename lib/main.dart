@@ -20,8 +20,8 @@ Future<void> main() async {
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
-  FirebaseAppCheck.instance.activate(
-      webRecaptchaSiteKey: '6LeMHbwmAAAAAB_46DP2IM2-jxwdyoTfsnl31D2u');
+  FirebaseAppCheck.instance
+      .activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
 
   runApp(const MyApp());
 }
