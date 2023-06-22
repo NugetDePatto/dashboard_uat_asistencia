@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
+
+import 'package:universal_html/html.dart' as html;
 
 class ArchivoController {
   FilePickerResult? archivo;
@@ -49,7 +52,7 @@ class ArchivoController {
       }
     }
 
-    // descargar(calendario);
+    descargar(calendario);
   }
 
   Future<void> abrirExcel() async {
@@ -116,7 +119,7 @@ class ArchivoController {
                   'clave': row[1]!.value.toString(),
                   'materia': row[2]!.value.toString(),
                   'sit': row[3]!.value.toString(),
-                  'f.f': row[4]!.value.toString(),
+                  'ff': row[4]!.value.toString(),
                   'dias': [
                     row[5]!.value.toString(),
                     row[6]!.value.toString(),
@@ -143,25 +146,25 @@ class ArchivoController {
         }
         // print(profesoresMapa);
 
-        // descargar(profesoresMapa);
+        descargar(profesoresMapa);
       }
     } catch (e) {
       // print('Error al leer el archivo: $e');
     }
   }
 
-  // descargar(mapa) {
-  //   String jsonString = jsonEncode(mapa);
-  //   final bytesJson = utf8.encode(jsonString);
-  //   final blob = html.Blob([bytesJson]);
-  //   final url = html.Url.createObjectUrlFromBlob(blob);
-  //   final anchor = html.document.createElement('a') as html.AnchorElement
-  //     ..href = url
-  //     ..style.display = 'none'
-  //     ..download = 'datos.json';
-  //   html.document.body?.children.add(anchor);
-  //   anchor.click();
-  //   html.document.body?.children.remove(anchor);
-  //   html.Url.revokeObjectUrl(url);
-  // }
+  descargar(mapa) {
+    String jsonString = jsonEncode(mapa);
+    final bytesJson = utf8.encode(jsonString);
+    final blob = html.Blob([bytesJson]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = 'datos.json';
+    html.document.body?.children.add(anchor);
+    anchor.click();
+    html.document.body?.children.remove(anchor);
+    html.Url.revokeObjectUrl(url);
+  }
 }

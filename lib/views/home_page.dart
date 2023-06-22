@@ -1,8 +1,6 @@
-import 'package:dashboard_uat_asistencia/views/profesor_view.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:dashboard_uat_asistencia/controllers/archivo_controller.dart';
-
-import 'calendario_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,15 +11,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ArchivoController archivoController = ArchivoController();
+  Map<String, dynamic> test = {
+    'nombre': 'test',
+    'algo': [
+      {'a': 'a'},
+      {'b': 'b'},
+    ],
+  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Excel to JSON'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -45,45 +51,20 @@ class _HomePageState extends State<HomePage> {
                           archivoController.leerExcel();
                           setState(() {});
                         },
-                  child: const Text('Convertir a JSON'),
+                  child: const Text('Cargar Ciclo 2023'),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: archivoController.archivo == null
+                  onPressed: archivoController.profesoresMapa.isEmpty
                       ? null
-                      : () {
-                          archivoController.crearMapaHorarios();
-                          setState(() {});
+                      : () async {
+                          var ref = FirebaseDatabase.instance.ref('ciclo2023');
+                          test = archivoController.profesoresMapa;
+                          await ref.set({
+                            'profesores': test,
+                          });
                         },
-                  child: const Text('Crear Calendario'),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CalendarioView(),
-                      ),
-                    );
-                  },
-                  child: const Text('Ver Calendario'),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfesorView(),
-                      ),
-                    );
-                  },
-                  child: const Text('Ver Profesores'),
+                  child: const Text('Prueba01'),
                 ),
               ],
             ),
