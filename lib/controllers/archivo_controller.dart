@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
-
 import 'package:universal_html/html.dart' as html;
 
 class ArchivoController {
@@ -107,51 +107,52 @@ class ArchivoController {
                 'nombre': nombre,
                 'tipo': tipo,
                 'codigo': codigo,
-                'horarios': []
+                'materias': {},
+                'lastUpdate': FieldValue.serverTimestamp(),
               };
 
               //se salta una fila porque no contiene información relevante
               i = i + 1;
             } else {
               //se agrega el horario al profesor a la lista de horarios
-              profesoresMapa[key]['horarios'].add(
-                {
-                  'grupo': row[0]!.value.toString(),
-                  'clave': row[1]!.value.toString(),
-                  'materia': row[2]!.value.toString(),
-                  'sit': row[3]!.value.toString(),
-                  'ff': row[4]!.value.toString(),
-                  'dias': [
-                    row[5]!.value.toString(),
-                    row[6]!.value.toString(),
-                    row[7]!.value.toString(),
-                    row[8]!.value.toString(),
-                    row[9]!.value.toString(),
-                    row[10]!.value.toString(),
-                    row[11]!.value.toString(),
-                  ],
-                  'hrsSem': row[12]!.value.toString(),
-                  'hrsM': row[13]!.value.toString(),
-                  'hrsNom': row[14]!.value.toString(),
-                  'aula': row[15]!.value.toString(),
-                  'inscritos': row[16]!.value.toString(),
-                  // 'asistencias': {
-                  //   //'17/06': {'asis': false, 'imagen': ''},
-                  // },
-                  'titular': key,
-                  'suplente': 'Sin suplente',
-                },
-              );
+              var clave = row[1]!.value.toString();
+              var grupo = row[0]!.value.toString();
+              profesoresMapa[key]['materias'][grupo + clave] = {
+                'grupo': grupo,
+                'clave': clave,
+                'materia': row[2]!.value.toString(),
+                'sit': row[3]!.value.toString(),
+                'ff': row[4]!.value.toString(),
+                'horario': [
+                  row[5]!.value.toString(),
+                  row[6]!.value.toString(),
+                  row[7]!.value.toString(),
+                  row[8]!.value.toString(),
+                  row[9]!.value.toString(),
+                  row[10]!.value.toString(),
+                  row[11]!.value.toString(),
+                ],
+                'hrsSem': row[12]!.value.toString(),
+                'hrsM': row[13]!.value.toString(),
+                'hrsNom': row[14]!.value.toString(),
+                'aula': row[15]!.value.toString(),
+                'inscritos': row[16]!.value.toString(),
+                // 'asistencias': {
+                //   //'17/06': {'asis': false, 'imagen': ''},
+                // },
+                'titular': key,
+                'suplente': 'Sin suplente',
+              };
             }
           }
         }
-        // print(profesoresMapa);
 
         // descargar(profesoresMapa);
       }
     } catch (e) {
       // print('Error al leer el archivo: $e');
     }
+    print(profesoresMapa.length);
   }
 
   descargar(mapa) {
