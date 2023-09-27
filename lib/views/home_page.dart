@@ -223,6 +223,8 @@ class _HomePageState extends State<HomePage> {
                               // var ciclo = _dropdownButtonExample.select.select;
                               var profesores = archivoController.profesoresMapa;
 
+                              ciclo = 'TEST - $ciclo';
+
                               var refCiclo = FirebaseFirestore.instance
                                   .collection('ciclos')
                                   .doc(ciclo);
