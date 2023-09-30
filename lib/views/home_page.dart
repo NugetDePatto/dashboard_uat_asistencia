@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard_uat_asistencia/controllers/archivo_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
+import 'package:dashboard_uat_asistencia/controllers/reportes_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/storage_controller.dart';
 import 'package:dashboard_uat_asistencia/views/ver_en_vivo_faltas_reportes_view.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage> {
             ? 2
             : 3;
 
-    ciclo = '${DateTime.now().year} - $numero $temporada';
+    ciclo = 'TEST - ${DateTime.now().year} - $numero $temporada';
 
     cantidadProfesores(ciclo).then((value) async {
       if (value > 0) {
@@ -169,10 +170,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
                     const Text('Paso 1'),
                     ElevatedButton.icon(
-                      onPressed: () async {
-                        await archivoController.abrirExcel();
-                        setState(() {});
-                      },
+                      onPressed: activo == 'Activo' || activo == ''
+                          ? null
+                          : () async {
+                              await archivoController.abrirExcel();
+                              setState(() {});
+                            },
                       label: const Text('Seleccionar Excel'),
                       icon: const Icon(Icons.search),
                     ),
@@ -223,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                               // var ciclo = _dropdownButtonExample.select.select;
                               var profesores = archivoController.profesoresMapa;
 
-                              ciclo = 'TEST - $ciclo';
+                              // ciclo = 'TEST - $ciclo';
 
                               var refCiclo = FirebaseFirestore.instance
                                   .collection('ciclos')
@@ -443,17 +446,17 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
                       icon: const Icon(Icons.download),
-                      onPressed: showDialogoMantenimiento,
+                      onPressed: () {},
                       label: const Text('Descargar Asistencia'),
                     ),
-                    const SizedBox(height: 15),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.visibility),
-                      onPressed: showDialogoMantenimiento,
-                      label: const Text(
-                        'Ver Profesor',
-                      ),
-                    ),
+                    // const SizedBox(height: 15),
+                    // ElevatedButton.icon(
+                    //   icon: const Icon(Icons.visibility),
+                    //   onPressed: showDialogoMantenimiento,
+                    //   label: const Text(
+                    //     'Ver Profesor',
+                    //   ),
+                    // ),
                     const SizedBox(height: 15),
                     const Divider(),
                     const SizedBox(height: 15),

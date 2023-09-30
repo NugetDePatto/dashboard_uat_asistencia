@@ -1,4 +1,6 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
+import 'package:dashboard_uat_asistencia/utils/dialogo_reportes.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:quick_notify/quick_notify.dart';
@@ -29,9 +31,9 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           children: [
-            Expanded(
+            const Expanded(
               child: Text(
                 'Faltantes',
                 textAlign: TextAlign.center,
@@ -41,12 +43,29 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
               ),
             ),
             Expanded(
-              child: Text(
-                'Reportes',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  const Text(
+                    'Reportes',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton.icon(
+                    icon: const Icon(CommunityMaterialIcons.download),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      verdescargasReportes(context);
+                    },
+                    label: const Text('Descargar'),
+                  ),
+                ],
               ),
             ),
           ],
@@ -112,11 +131,30 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                       itemBuilder: (context, index) {
                         var id = index.toString();
                         var aux = id.split('_');
-                        var salon = aux[0];
+                        var salon = snapshot.data?.docs[index]['aula'];
                         return ListTile(
-                          title: Text(snapshot.data?.docs[index]['codigo']),
-                          subtitle: Text(snapshot.data?.docs[index]['mensaje']),
-                          trailing: Text(snapshot.data?.docs[index]['fecha']),
+                          subtitle: Text(
+                            snapshot.data?.docs[index]['titular'],
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          title: Text(
+                            (snapshot.data?.docs[index]['mensaje'] == ''
+                                    ? 'Sin mensaje'
+                                    : snapshot.data?.docs[index]['mensaje'])
+                                .toString()
+                                .trim(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          trailing: Text(
+                            '${snapshot.data?.docs[index]['fecha']}\n$salon',
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
                         );
                       },
                     );
