@@ -14,7 +14,7 @@ void crearExcel(
   Sheet sheetObject = excel['Sheet1'];
   sheetObject.appendRow(headers);
 
-  var row = 2;
+  var row = 1;
   for (var i = 0; i < data.length; i++) {
     var datos = data[i];
     for (var j = 0; j < headers.length; j++) {
