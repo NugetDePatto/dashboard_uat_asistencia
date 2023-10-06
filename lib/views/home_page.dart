@@ -3,6 +3,7 @@ import 'package:dashboard_uat_asistencia/controllers/archivo_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/reportes_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/storage_controller.dart';
+import 'package:dashboard_uat_asistencia/controllers/test_reportes.dart';
 import 'package:dashboard_uat_asistencia/views/ver_en_vivo_faltas_reportes_view.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
