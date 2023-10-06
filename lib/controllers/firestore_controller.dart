@@ -12,11 +12,13 @@ Future<int> cantidadProfesores(String path) async {
 //funcion para ver en vivo una coleccion de datos
 //recibe el path de la coleccion
 //retorna un streambuilder
-Stream<QuerySnapshot<Map<String, dynamic>>> verProfesores(String path) {
+Stream<QuerySnapshot<Map<String, dynamic>>> verProfesoresFaltantes(
+    String path) {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   var ciclos = firestore.collection('ciclos');
   var ciclo = ciclos.doc(path);
-  var profesores = ciclo.collection('inasistencias');
+  var profesores =
+      ciclo.collection('asistencias').where('asistencia', isEqualTo: 0);
   var profesoresStream = profesores.snapshots();
 
   return profesoresStream;

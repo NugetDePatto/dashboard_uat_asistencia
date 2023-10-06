@@ -446,8 +446,56 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
                       icon: const Icon(Icons.download),
-                      onPressed: () {},
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Descargar Asistencia'),
+                            content: const Text(
+                                'Seleccione los grupos que desea descargar'),
+                            actions: [
+                              CheckboxListTile(
+                                value: true,
+                                onChanged: (c) {},
+                                title: const Text('I'),
+                              ),
+                              CheckboxListTile(
+                                value: true,
+                                onChanged: (c) {},
+                                title: const Text('J'),
+                              ),
+                              CheckboxListTile(
+                                value: true,
+                                onChanged: (c) {},
+                                title: const Text('G'),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Descargar'))
+                            ],
+                          ),
+                        );
+
+                        descargarTestDeAsistencia(
+                          ['I', 'J', 'G'],
+                          ciclo,
+                        );
+                      },
                       label: const Text('Descargar Asistencia'),
+                    ),
+                    const SizedBox(height: 15),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.check),
+                      onPressed: () {},
+                      label: const Text('Justificar'),
+                    ),
+                    const SizedBox(height: 15),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.warning),
+                      onPressed: () {},
+                      label: const Text('Día Inhábil'),
                     ),
                     // const SizedBox(height: 15),
                     // ElevatedButton.icon(

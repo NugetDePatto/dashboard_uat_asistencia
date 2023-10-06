@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
 import 'package:dashboard_uat_asistencia/utils/dialogo_reportes.dart';
@@ -61,7 +62,7 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () {
-                      verdescargasReportes(context);
+                      verdescargasReportes(context, widget.ciclo);
                     },
                     label: const Text('Descargar'),
                   ),
@@ -78,9 +79,10 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
           children: <Widget>[
             Expanded(
               child: StreamBuilder(
-                stream: verProfesores(widget.ciclo),
+                stream: verProfesoresFaltantes(widget.ciclo),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    print(snapshot.data?.docs.length);
                     int reportesLocales = GetStorage().read('faltantes') ?? 0;
 
                     if (reportesLocales != snapshot.data?.docs.length) {
@@ -96,9 +98,37 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                     return ListView.builder(
                       itemCount: snapshot.data?.docs.length,
                       itemBuilder: (context, index) {
+                        var dispositivos = snapshot.data?.docs[index].data();
+                        dispositivos?.remove('asistencia');
+                        var llaves = dispositivos?.keys.toList();
+                        print(llaves);
                         return ListTile(
-                          title: Text(snapshot.data?.docs[index]['titular']),
-                          subtitle: Text(snapshot.data?.docs[index]['horario']),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${dispositivos?[llaves?[0]]['titular']}',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                              Text(
+                                dispositivos![llaves?[0]]['aula'],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              for (var llave in llaves!)
+                                Text(
+                                  "${"$llave " + dispositivos[llave]['hora']} ${Timestamp(dispositivos[llave]['timeServer'].seconds, dispositivos[llave]['timeServer'].nanoseconds).toDate().toString().split(' ')[0]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          // subtitle: Text(snapshot.data?.docs[index]['horario']),
                         );
                       },
                     );
@@ -133,6 +163,10 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                         var aux = id.split('_');
                         var salon = snapshot.data?.docs[index]['aula'];
                         return ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 5,
+                          ),
                           subtitle: Text(
                             snapshot.data?.docs[index]['titular'],
                             style: const TextStyle(
@@ -144,6 +178,7 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                                     ? 'Sin mensaje'
                                     : snapshot.data?.docs[index]['mensaje'])
                                 .toString()
+                                .toUpperCase()
                                 .trim(),
                             style: const TextStyle(
                               fontSize: 20,
