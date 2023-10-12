@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
 import 'package:dashboard_uat_asistencia/utils/dialogo_reportes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:quick_notify/quick_notify.dart';
@@ -82,7 +83,9 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                 stream: verProfesoresFaltantes(widget.ciclo),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    print(snapshot.data?.docs.length);
+                    if (kDebugMode) {
+                      print(snapshot.data?.docs.length);
+                    }
                     int reportesLocales = GetStorage().read('faltantes') ?? 0;
 
                     if (reportesLocales != snapshot.data?.docs.length) {
@@ -95,37 +98,35 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                             'Revisa la lista de profesores para ver más detalles',
                       );
                     }
+                    var data = snapshot.data?.docs.toList();
+
+                    //convierte data en una lista de mapas
+                    List<Map<String, dynamic>> registros =
+                        data!.map((e) => e.data()).toList();
+
+                    registros.removeWhere((element) {
+                      var keys = element.keys;
+                      for (var key in keys) {
+                        print(element[key]['asistencia']);
+                        if (element[key]['asistencia'] == true) return false;
+                      }
+                      return true;
+                    });
+
                     return ListView.builder(
-                      itemCount: snapshot.data?.docs.length,
+                      itemCount: registros.length,
                       itemBuilder: (context, index) {
-                        var dispositivos = snapshot.data?.docs[index].data();
-                        dispositivos?.remove('asistencia');
-                        var llaves = dispositivos?.keys.toList();
-                        print(llaves);
-                        return ListTile(
+                        return const ListTile(
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${dispositivos?[llaves?[0]]['titular']}',
-                                style: const TextStyle(
+                                'Hola Mundo',
+                                style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
-                              Text(
-                                dispositivos![llaves?[0]]['aula'],
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              for (var llave in llaves!)
-                                Text(
-                                  "${"$llave " + dispositivos[llave]['hora']} ${Timestamp(dispositivos[llave]['timeServer'].seconds, dispositivos[llave]['timeServer'].nanoseconds).toDate().toString().split(' ')[0]}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
                             ],
                           ),
                           // subtitle: Text(snapshot.data?.docs[index]['horario']),
