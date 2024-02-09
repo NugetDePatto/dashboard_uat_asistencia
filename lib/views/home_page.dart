@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
             ? 2
             : 3;
 
-    ciclo = 'TEST - ${DateTime.now().year} - $numero $temporada';
+    ciclo = '${DateTime.now().year} - $numero $temporada';
 
     cantidadProfesores(ciclo).then((value) async {
       if (value > 0) {

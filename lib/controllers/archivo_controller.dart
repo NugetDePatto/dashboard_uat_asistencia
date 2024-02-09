@@ -93,7 +93,7 @@ class ArchivoController {
               //como varios datos estan en la misma celda, se separan por medio de un split
               List<String> datos =
                   row[0]!.value.toString().substring(8).split(' - ');
-              String nombre = datos[0];
+              String nombre = datos[0].trim();
               String tipo = datos[1];
               String codigo = datos[2];
               String id = row[0]!.value.toString().substring(0, 5);

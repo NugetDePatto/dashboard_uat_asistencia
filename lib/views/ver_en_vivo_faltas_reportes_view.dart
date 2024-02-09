@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
 import 'package:dashboard_uat_asistencia/utils/dialogo_reportes.dart';
+import 'package:dashboard_uat_asistencia/utils/to_human_read.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -107,7 +108,6 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                     registros.removeWhere((element) {
                       var keys = element.keys;
                       for (var key in keys) {
-                        print(element[key]['asistencia']);
                         if (element[key]['asistencia'] == true) return false;
                       }
                       return true;
@@ -116,13 +116,24 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                     return ListView.builder(
                       itemCount: registros.length,
                       itemBuilder: (context, index) {
-                        return const ListTile(
+                        var llaves = registros[index].keys.toList();
+                        var asist = registros[index][llaves[0]];
+                        var titular = asist['titular'];
+                        var aula = asist['aula'];
+                        var horario = asist['hora'];
+                        var timeServer = asist['timeServer'];
+
+                        //timeserver to date
+                        DateTime date = DateTime.fromMillisecondsSinceEpoch(
+                            timeServer.millisecondsSinceEpoch);
+
+                        return ListTile(
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Hola Mundo',
-                                style: TextStyle(
+                                formatRelativeTime(date),
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                 ),

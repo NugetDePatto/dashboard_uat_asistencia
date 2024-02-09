@@ -49,6 +49,7 @@ dependencies:
   quick_notify: ^0.2.1
   get_storage: ^2.1.1
   community_material_icon: ^5.9.55
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
