@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    futureFiles = FirebaseStorage.instance.ref('/images').listAll();
+    //futureFiles = FirebaseStorage.instance.ref('/images').listAll();
 
     var month = DateTime.now().month;
 
@@ -245,6 +245,7 @@ class _HomePageState extends State<HomePage> {
                                   refCiclo.collection('profesores');
 
                               profesores.forEach((key, value) async {
+                                print(key);
                                 await refProfesores.doc(key).set(value);
                               });
 

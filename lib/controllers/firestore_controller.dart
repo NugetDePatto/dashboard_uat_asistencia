@@ -4,6 +4,7 @@ Future<int> cantidadProfesores(String path) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   var ciclos = firestore.collection('ciclos');
   var ciclo = ciclos.doc(path);
+
   var profesores = await ciclo.collection('profesores').count().get();
 
   return profesores.count;
