@@ -1,7 +1,9 @@
-List<List<String>> crearCalendario(String fin) {
-  int semanas = calcularSemanas(fin);
+DateTime inicioCiclo = DateTime(2024, 2, 19);
+DateTime finCiclo = DateTime(2024, 4, 28);
+
+List<List<String>> crearCalendario() {
+  int semanas = calcularSemanas();
   List<List<String>> calendario = [];
-  DateTime inicioCiclo = DateTime(2024, 2, 19);
 
   for (int i = 0; i < semanas; i++) {
     DateTime inicioSemana = inicioCiclo.add(Duration(days: 7 * i));
@@ -15,10 +17,7 @@ List<List<String>> crearCalendario(String fin) {
   return calendario;
 }
 
-int calcularSemanas(String fin) {
-  DateTime inicioCiclo = DateTime(2024, 2, 19);
-  DateTime finCiclo = DateTime.parse(fin);
-
+int calcularSemanas() {
   int semanas = finCiclo.difference(inicioCiclo).inDays ~/ 7;
 
   print('Semanas: $semanas');

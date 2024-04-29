@@ -1,3 +1,4 @@
+import 'package:dashboard_uat_asistencia/repositories/pdf_repositorie.dart';
 import 'package:dashboard_uat_asistencia/repositories/profesor_repositorie.dart';
 
 class ReporteService {
@@ -9,11 +10,13 @@ class ReporteService {
 
     for (var profesor in calendarioProfesores.entries) {
       asistencias[profesor.key] =
-          obtenerDiasTotalesYAsistidosPorMateria(profesor.value);
+          obtenerDiasTotalesYAsistidosPorMateria(profesor.key, profesor.value);
     }
+
+    // PDFRepository().obtenerPDF();
   }
 
-  obtenerDiasTotalesYAsistidosPorMateria(materias) {
+  obtenerDiasTotalesYAsistidosPorMateria(profesor, materias) {
     Map<String, dynamic> asistencias = {};
 
     for (var materia in materias.entries) {
@@ -32,14 +35,18 @@ class ReporteService {
         }
       }
 
+      Map<String, dynamic> datosMateria =
+          ProfesorRepository().obtenerDatosMateria(profesor, materia.key);
+
       asistencias[materia.key] = {
         'diasTotales': diasTotales,
         'diasAsistidos': diasAsistidos,
         'porcentaje': (diasAsistidos / diasTotales * 100).toStringAsFixed(2),
+        'nombre': datosMateria['nombre'],
+        'grupo': datosMateria['grupo'],
+        'horario': datosMateria['horario'],
+        'nombre_profesor': datosMateria['titular'].split('-')[1],
       };
-
-      print(materia.key);
-      print(asistencias[materia.key]);
     }
   }
 }

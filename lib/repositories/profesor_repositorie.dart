@@ -16,7 +16,7 @@ class ProfesorRepository {
 
     Map<String, dynamic> calendarioProfesores = {};
 
-    List<List<String>> calendario = crearCalendario(finCalendario);
+    List<List<String>> calendario = crearCalendario();
 
     for (var profesor in profesores.entries) {
       Map<String, dynamic> profesorCalendario = obtenerProfesorCalendario(
