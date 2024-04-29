@@ -1,4 +1,4 @@
-import 'package:dashboard_uat_asistencia/constantes/bloques.dart';
+import 'package:dashboard_uat_asistencia/zold/constantes/bloques.dart';
 import 'package:flutter/material.dart';
 
 class BloquesView extends StatefulWidget {

@@ -1,5 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
+import 'package:flutter/foundation.dart';
+
+class ReporteController {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  String get ciclo {
+    // enero a mayo = primavera
+    // junio a julio = verano
+    // agosto a diciembre = otoño
+
+    int mesActual = DateTime.now().month;
+
+    if (kDebugMode) {
+      return '2023 - 3 Otoño';
+    } else if (mesActual >= 1 && mesActual <= 5) {
+      return '${DateTime.now().year} - 1 Primavera';
+    } else if (mesActual >= 6 && mesActual <= 7) {
+      return '${DateTime.now().year} - 2 Verano';
+    } else {
+      return '${DateTime.now().year} - 3 Otoño';
+    }
+  }
+
+  reportePorCarrera() {
+    var ciclos = firestore.collection('ciclos').doc(ciclo);
+    var asistencias = ciclos.collection('asistencias').where(
+          'idAsistencia',
+        );
+  }
+}
 
 var excel;
 

@@ -1,8 +1,10 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
-import 'package:dashboard_uat_asistencia/utils/dialogo_reportes.dart';
-import 'package:dashboard_uat_asistencia/utils/to_human_read.dart';
+import 'package:dashboard_uat_asistencia/zold/controllers/firestore_controller.dart';
+import 'package:dashboard_uat_asistencia/zold/utils/dialogo_reportes.dart';
+import 'package:dashboard_uat_asistencia/zold/utils/to_human_read.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -85,9 +87,10 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     if (kDebugMode) {
-                      print(snapshot.data?.docs.length);
+                      print("hola${snapshot.data!.docs.length}");
                     }
                     int reportesLocales = GetStorage().read('faltantes') ?? 0;
+                    print('prueba 1');
 
                     if (reportesLocales != snapshot.data?.docs.length) {
                       GetStorage()
@@ -99,19 +102,35 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                             'Revisa la lista de profesores para ver más detalles',
                       );
                     }
+                    print('prueba 2');
                     var data = snapshot.data?.docs.toList();
 
                     //convierte data en una lista de mapas
                     List<Map<String, dynamic>> registros =
                         data!.map((e) => e.data()).toList();
 
+                    print('prueba 3');
+
+                    // for (var registro in registros) {
+                    //   var keys = registro.keys.toList();
+                    //   for (var key in keys) {
+                    //     print(registro[key][0]);
+                    //   }
+                    // }
+
                     registros.removeWhere((element) {
                       var keys = element.keys;
                       for (var key in keys) {
-                        if (element[key]['asistencia'] == true) return false;
+                        var x = element[key]['asistencia'];
+                        print('------------------------------------');
+                        // if (element[key]['asistencia'] == true) {
+                        //   return false;
+                        // }
                       }
                       return true;
                     });
+
+                    print('prueba 4');
 
                     return ListView.builder(
                       itemCount: registros.length,
@@ -122,7 +141,6 @@ class EnVivoFaltasYReportesState extends State<EnVivoFaltasYReportes> {
                         var aula = asist['aula'];
                         var horario = asist['hora'];
                         var timeServer = asist['timeServer'];
-
                         //timeserver to date
                         DateTime date = DateTime.fromMillisecondsSinceEpoch(
                             timeServer.millisecondsSinceEpoch);

@@ -1,6 +1,5 @@
 import 'package:dashboard_uat_asistencia/firebase_options.dart';
-import 'package:dashboard_uat_asistencia/views/home_page.dart';
-import 'package:dashboard_uat_asistencia/views/ver_en_vivo_faltas_reportes_view.dart';
+import 'package:dashboard_uat_asistencia/pages/home/home_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -30,8 +29,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomePage(),
-      // home: const EnVivoFaltasYReportes(ciclo: 'TEST - 2023 - 3 Otoño'),
+      home: const HomeView(),
     );
   }
 }

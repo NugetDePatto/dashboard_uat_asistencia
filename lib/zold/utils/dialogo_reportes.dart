@@ -1,5 +1,5 @@
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:dashboard_uat_asistencia/controllers/reportes_controller.dart';
+import 'package:dashboard_uat_asistencia/zold/controllers/reportes_controller.dart';
 import 'package:flutter/material.dart';
 
 void verdescargasReportes(context, ciclo) {

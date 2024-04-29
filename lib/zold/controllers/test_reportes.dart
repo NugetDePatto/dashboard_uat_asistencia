@@ -1,4 +1,4 @@
-import 'package:dashboard_uat_asistencia/controllers/reportes_controller.dart';
+import 'package:dashboard_uat_asistencia/zold/controllers/reportes_controller.dart';
 import 'package:excel/excel.dart';
 
 void descargarTestDeAsistencia(List<String> grupos, String ciclo) {
