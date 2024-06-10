@@ -1,12 +1,13 @@
 import 'package:dashboard_uat_asistencia/utils/calendario_utils.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:convert';
 import 'dart:html' as html;
 
 class PDFRepository {
-  obtenerPDF() {
-    final pdf = esqueleto();
+  obtenerPDF(asistencias) {
+    final pdf = esqueleto(asistencias);
     guardarPDF(pdf);
   }
 
@@ -32,7 +33,7 @@ class PDFRepository {
       ..click();
   }
 
-  esqueleto() {
+  esqueleto(asistencias) {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -101,7 +102,7 @@ class PDFRepository {
                         ],
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ],
@@ -119,7 +120,7 @@ class PDFRepository {
                 1: pw.FlexColumnWidth(2),
               },
               defaultVerticalAlignment: pw.TableCellVerticalAlignment.middle,
-              children: datos(),
+              children: [...datos(asistencias)],
             ),
           ];
         },
@@ -157,7 +158,42 @@ class PDFRepository {
     return pdf;
   }
 
-  datos() {
-    return [];
+  datos(asistencias) {
+    return [
+      for (var profesor in asistencias.entries)
+        pw.TableRow(
+          children: [
+            texto(profesor.key, center: false),
+            pw.Table(
+              border: pw.TableBorder.symmetric(
+                inside: const pw.BorderSide(color: PdfColors.grey),
+                outside: const pw.BorderSide(color: PdfColors.black),
+              ),
+              columnWidths: const <int, pw.TableColumnWidth>{
+                0: pw.FlexColumnWidth(1.85),
+                1: pw.FlexColumnWidth(.5),
+                2: pw.FlexColumnWidth(.5),
+                3: pw.FlexColumnWidth(1),
+                4: pw.FlexColumnWidth(1),
+                5: pw.FlexColumnWidth(1),
+              },
+              defaultVerticalAlignment: pw.TableCellVerticalAlignment.middle,
+              children: [
+                for (var materia in profesor.value.values)
+                  pw.TableRow(
+                    children: [
+                      texto(materia['nombre'], center: false),
+                      texto('-'),
+                      texto(materia['grupo']),
+                      texto(materia['diasTotales'].toString()),
+                      texto(materia['diasAsistidos'].toString()),
+                      texto(materia['porcentaje'].toString()),
+                    ],
+                  ),
+              ],
+            ),
+          ],
+        ),
+    ];
   }
 }

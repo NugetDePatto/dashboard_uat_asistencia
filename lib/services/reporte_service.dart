@@ -13,7 +13,14 @@ class ReporteService {
           obtenerDiasTotalesYAsistidosPorMateria(profesor.key, profesor.value);
     }
 
-    // PDFRepository().obtenerPDF();
+    // for (var profesor in asistencias.entries) {
+    //   print(profesor.key);
+    //   for (var materia in profesor.value.values) {
+    //     print(materia);
+    //   }
+    // }
+
+    PDFRepository().obtenerPDF(asistencias);
   }
 
   obtenerDiasTotalesYAsistidosPorMateria(profesor, materias) {
@@ -38,7 +45,7 @@ class ReporteService {
       Map<String, dynamic> datosMateria =
           ProfesorRepository().obtenerDatosMateria(profesor, materia.key);
 
-      asistencias[materia.key] = {
+      var mapa = {
         'diasTotales': diasTotales,
         'diasAsistidos': diasAsistidos,
         'porcentaje': (diasAsistidos / diasTotales * 100).toStringAsFixed(2),
@@ -47,7 +54,11 @@ class ReporteService {
         'horario': datosMateria['horario'],
         'nombre_profesor': datosMateria['titular'].split('-')[1],
       };
+
+      asistencias[materia.key] = mapa;
     }
+
+    return asistencias;
   }
 }
 
