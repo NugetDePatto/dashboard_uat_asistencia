@@ -3,7 +3,8 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 
 class JustificadoView extends StatefulWidget {
-  const JustificadoView({super.key});
+  const JustificadoView({super.key, this.ciclo = 'TEST - 2023 - 3 Otoño'});
+  final String ciclo;
 
   @override
   State<JustificadoView> createState() => _JustificadoViewState();
@@ -96,13 +97,20 @@ class _JustificadoViewState extends State<JustificadoView> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                Text('Fecha seleccionada: $fechaSeleccionada',
+                Text('Fecha seleccionada *\n$fechaSeleccionada',
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     )),
                 const SizedBox(height: 20),
-                const Text('Selecciona un profesor'),
+                const Text(
+                  'Selecciona un profesor *',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: nombreProfesor,
@@ -120,7 +128,7 @@ class _JustificadoViewState extends State<JustificadoView> {
                     if (nombre.isNotEmpty) {
                       final querySnapshot = await firestore
                           .collection('ciclos')
-                          .doc('TEST - 2023 - 3 Otoño')
+                          .doc(widget.ciclo)
                           .collection('profesores')
                           .get();
 
@@ -138,7 +146,8 @@ class _JustificadoViewState extends State<JustificadoView> {
                   child: const Text('Buscar'),
                 ),
                 const SizedBox(height: 20),
-                if (resultadosBusqueda.isNotEmpty) ...[
+                if (resultadosBusqueda.isNotEmpty &&
+                    profesorSeleccionado == -1) ...[
                   const Text(
                     'Resultados de la búsqueda:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -164,6 +173,89 @@ class _JustificadoViewState extends State<JustificadoView> {
                     },
                   ),
                 ],
+                if (profesorSeleccionado != -1) ...[
+                  const SizedBox(height: 20),
+                  Text(
+                    'Profesor seleccionado\n${resultadosBusqueda[profesorSeleccionado].id}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  //dias inhabiles actualmente del profesor
+                  const SizedBox(height: 20),
+
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: firestore
+                        .collection('ciclos')
+                        .doc(widget.ciclo)
+                        .collection('profesores')
+                        .doc(resultadosBusqueda[profesorSeleccionado].id)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        List faltasJustificadas = [];
+                        if (data.containsKey('faltas_justificadas')) {
+                          faltasJustificadas =
+                              data['faltas_justificadas'] as List<dynamic>;
+                        }
+                        return Column(
+                          children: [
+                            const Text(
+                              '[Faltas Justificadas]',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            if (faltasJustificadas.isNotEmpty) ...[
+                              for (final falta in faltasJustificadas)
+                                ListTile(
+                                  title: Text(
+                                    '${falta.toDate().day}/${falta.toDate().month}/${falta.toDate().year}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    onPressed: () {
+                                      // elimina la falta justificada del profesor
+                                      firestore
+                                          .collection('ciclos')
+                                          .doc(widget.ciclo)
+                                          .collection('profesores')
+                                          .doc(resultadosBusqueda[
+                                                  profesorSeleccionado]
+                                              .id)
+                                          .update(
+                                        {
+                                          'faltas_justificadas':
+                                              FieldValue.arrayRemove([falta])
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.delete),
+                                  ),
+                                ),
+                            ] else
+                              const Text(
+                                'No hay faltas justificadas',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                          ],
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                ],
                 const SizedBox(height: 180),
               ],
             ),
@@ -180,12 +272,11 @@ class _JustificadoViewState extends State<JustificadoView> {
                 fechaSeleccionadaTimestamp != null) {
               final profesor = resultadosBusqueda[profesorSeleccionado];
               final idProfesor = profesor.id;
-              const idCiclo = 'TEST - 2023 - 3 Otoño';
 
               // añade la falta justificada al profesor
               firestore
                   .collection('ciclos')
-                  .doc(idCiclo)
+                  .doc(widget.ciclo)
                   .collection('profesores')
                   .doc(idProfesor)
                   .update(
@@ -197,13 +288,26 @@ class _JustificadoViewState extends State<JustificadoView> {
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Falta justificada correctamente'),
+                  content: Text('Fecha justificada correctamente',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                      )),
+                  backgroundColor: Colors.green,
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Selecciona un profesor y una fecha'),
+                  content: Text(
+                    'Selecciona un profesor y una fecha',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                    ),
+                  ),
+                  backgroundColor: Colors.yellow,
                 ),
               );
             }

@@ -4,8 +4,10 @@ import 'package:dashboard_uat_asistencia/controllers/firestore_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/reportes_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/storage_controller.dart';
 import 'package:dashboard_uat_asistencia/controllers/test_reportes.dart';
+import 'package:dashboard_uat_asistencia/views/justificado_view.dart';
 import 'package:dashboard_uat_asistencia/views/ver_en_vivo_faltas_reportes_view.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'dia_inhabil_view.dart';
@@ -492,7 +494,16 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 15),
                     ElevatedButton.icon(
                       icon: const Icon(Icons.check),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return const JustificadoView(
+                                // ciclo:
+                                //     ciclo
+                                );
+                          },
+                        ));
+                      },
                       label: const Text('Justificar'),
                     ),
                     const SizedBox(height: 15),
@@ -502,7 +513,10 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DiaInhabilView(),
+                            builder: (context) => DiaInhabilView(
+                                // ciclo:
+                                //     ciclo
+                                ),
                           ),
                         );
                       },
