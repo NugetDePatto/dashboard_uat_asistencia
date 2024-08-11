@@ -8,6 +8,8 @@ import 'package:dashboard_uat_asistencia/views/ver_en_vivo_faltas_reportes_view.
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import 'dia_inhabil_view.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -80,7 +82,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text(
           'Panel de Control',
@@ -90,7 +92,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         toolbarHeight: 120,
       ),
       body: SizedBox(
@@ -496,17 +498,16 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 15),
                     ElevatedButton.icon(
                       icon: const Icon(Icons.warning),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DiaInhabilView(),
+                          ),
+                        );
+                      },
                       label: const Text('Día Inhábil'),
                     ),
-                    // const SizedBox(height: 15),
-                    // ElevatedButton.icon(
-                    //   icon: const Icon(Icons.visibility),
-                    //   onPressed: showDialogoMantenimiento,
-                    //   label: const Text(
-                    //     'Ver Profesor',
-                    //   ),
-                    // ),
                     const SizedBox(height: 15),
                     const Divider(),
                     const SizedBox(height: 15),
